@@ -1,0 +1,81 @@
+body {
+    background: linear-gradient(to bottom right, #ffe3fd, #ffa9f9);
+    display: flex; /* Define layout flex para o body */
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.esquerda {
+    display: flex;
+    flex-direction: column; /* Coloca os itens um embaixo do outro */
+    align-items: flex-start; /* Alinha os itens à esquerda */
+    margin-top: 4vh;
+    margin-bottom: 5vh;
+    gap: 3vh;
+}
+
+.esquerda div {
+    padding: 10px;
+    margin-left: 5vh; /* Espaço entre as divs */
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    background-color: #ff6df5;
+    border-radius: 20px;
+    text-align: center;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: bold;
+}
+
+.cima {
+    font-size: 1.5rem;
+    width: 30vh;
+    height: 20vh;
+}
+
+.meio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30vh;
+    height: 50vh;
+}
+
+.botao {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    background-color: #ff6df5;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+.baixo {
+    margin-top: 1vh;
+    font-size: 1.8rem;
+    width: 30vh;
+    height: 15vh;
+}
+
+.graficos {
+    background-color: #ffffff;
+    width: 160vmin;
+    height: 92vmin;
+    margin-top: 4vh;
+    margin-right: 3vh;
+    border-radius: 20px;
+}
+
+.numero_destaque {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: bold;
+    display: block;
+    font-size: 3.2rem;
+    text-decoration: underline;
+}

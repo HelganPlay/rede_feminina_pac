@@ -1,0 +1,7 @@
+.upload-box {
+        border: 2px dashed #007bff;
+        padding: 20px;
+        width: 300px;
+        margin: 50px auto;
+        text-align: center;
+      }

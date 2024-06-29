@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Incluindo a biblioteca Chart.js -->
+    <title>Dados rede feminina</title>
+</head>
+<body>
+    <div class="esquerda">
+        <div class="cima">Pacientes<br>esse ano<br><span class="numero_destaque">{{ valor }}</span></div>
+        <div class="meio"> kkkk </div>
+        <div class="baixo">
+            <a href="/receber_arquivo" class="botao">Adicionar<br>pacientes</a>
+        </div>
+    </div>
+    <div class="graficos">
+         <canvas id="myChart"></canvas>
+    </div>
+    <script>
+        const tiposCancer = {{ tipos_cancer | tojson }};
+        const contagens = {{ contagens | tojson }};
+    </script>
+    <script src="{{ url_for('static', filename='js/gerar_grafico.js') }}"></script>
+</body>
+</html>
