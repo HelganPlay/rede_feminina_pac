@@ -11,14 +11,24 @@
 <body>
     <div class="esquerda">
         <div class="cima">Pacientes<br>esse ano<br><span class="numero_destaque">{{ valor }}</span></div>
-        <div class="meio"> kkkk </div>
+        <div class="meio">
+            <form action="/atualizar_grafico" method="POST">
+                <label for="quantidade_barras">Quantidade de <br>tipos de câncer</label>
+                <input type="number" id="quantidade_barras" name="quantidade_barras" min="1" max="20" value="{{ quantidade_barras }}">
+                <button type="submit">Atualizar</button>
+            </form>
+        </div>
         <div class="baixo">
             <a href="/receber_arquivo" class="botao">Adicionar<br>pacientes</a>
         </div>
     </div>
     <div class="graficos">
          <canvas id="myChart"></canvas>
+        <div class="nomes">
+           Desenvolvido por: Matheus R., Gabriel Lopes, João Bast, George Lucas, Samuel Morsch
+        </div>
     </div>
+
     <script>
         const tiposCancer = {{ tipos_cancer | tojson }};
         const contagens = {{ contagens | tojson }};

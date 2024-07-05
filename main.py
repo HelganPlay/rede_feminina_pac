@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect
 from flask_mysqldb import MySQL
 import os
-from queries import check_and_create_table, contar_quantidade_total, pessoas_por_tipo_de_cancer, contar_quantidade_diferentes
+from queries import check_and_create_table, contar_quantidade_total, contar_quantidade_diferentes
 from excel_to_mysql import insert_data_from_excel
 
 app = Flask(__name__)
@@ -23,14 +23,26 @@ excel_file_path = os.path.join('uploads', 'planilha.xlsx')
 # Inicializar MySQL
 mysql = MySQL(app)
 
+# Variável global para a quantidade de barras
+quantidade_barras = 5
 
 @app.route('/')
 def index():
     check_and_create_table(mysql)
     valor = contar_quantidade_total(mysql, "Nome")
-    tipos_cancer, contagem = contar_quantidade_diferentes(mysql, "tipo_cancer")
+    tipos_cancer, contagem = contar_quantidade_diferentes(mysql, "tipo_cancer", quantidade_barras)
 
-    return render_template(r'index.html', valor=valor, tipos_cancer=tipos_cancer, contagens=contagem)
+    return render_template('index.html', valor=valor, tipos_cancer=tipos_cancer, contagens=contagem, quantidade_barras=quantidade_barras)
+
+
+@app.route('/atualizar_grafico', methods=['POST'])
+def atualizar_grafico():
+    global quantidade_barras
+
+    # Obter a quantidade de barras do formulário
+    quantidade_barras = int(request.form['quantidade_barras'])
+
+    return redirect('/')
 
 
 @app.route('/upload', methods=['POST'])

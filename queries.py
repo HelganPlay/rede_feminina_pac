@@ -47,11 +47,12 @@ def contar_quantidade_total(mysql, coluna):
     cursor.close()
     return valor
 
-def contar_quantidade_diferentes(mysql, coluna):
+def contar_quantidade_diferentes(mysql, coluna, limite):
     cursor = mysql.connection.cursor()
     cursor.execute(f"""SELECT {coluna}, COUNT(*) as count
                         FROM pacientes_{year}
                         GROUP BY {coluna}
+                        LIMIT {limite}
                         ;""")
     valor = cursor.fetchall()
     tipos_cancer = [row[0] for row in valor]
