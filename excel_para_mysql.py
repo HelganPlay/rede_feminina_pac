@@ -1,16 +1,15 @@
 import pandas as pd
-from queries import get_current_year
+from queries import pegar_ano_atual
 from unidecode import unidecode
 
+
+# CREATE
 def insert_data_from_excel(mysql, excel_file_path):
-    # Ler o arquivo Excel até a coluna 'O'
     df = pd.read_excel(excel_file_path, usecols='A:O')
 
-    # Obter o ano atual e o nome da tabela
-    year = get_current_year()
-    table_name = f'pacientes_{year}'
+    ano = pegar_ano_atual()
+    table_name = f'pacientes_{ano}'
 
-    # Conectar ao banco de dados e inserir dados
     cursor = mysql.connection.cursor()
 
     for _, row in df.iterrows():
@@ -45,5 +44,3 @@ def insert_data_from_excel(mysql, excel_file_path):
     mysql.connection.commit()
     cursor.close()
 
-# Exemplo de uso:
-# insert_data_from_excel(mysql_connection_object, '/mnt/data/Planilha estudantes.xlsx')

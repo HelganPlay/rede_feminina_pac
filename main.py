@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect
 from flask_mysqldb import MySQL
 import os
-from queries import check_and_create_table, contar_quantidade_total, contar_quantidade_diferentes
-from excel_to_mysql import insert_data_from_excel
+from queries import criar_tabela_para_o_ano, contar_quantidade_total, contar_quantidade_diferentes, pegar_ano_atual
+from excel_para_mysql import insert_data_from_excel
 
 app = Flask(__name__)
 
@@ -26,9 +26,11 @@ mysql = MySQL(app)
 # Variável global para a quantidade de barras
 quantidade_barras = 5
 
+
+
 @app.route('/')
 def index():
-    check_and_create_table(mysql)
+    criar_tabela_para_o_ano(mysql)
     valor = contar_quantidade_total(mysql, "Nome")
     tipos_cancer, contagem = contar_quantidade_diferentes(mysql, "tipo_cancer", quantidade_barras)
 
@@ -39,7 +41,6 @@ def index():
 def atualizar_grafico():
     global quantidade_barras
 
-    # Obter a quantidade de barras do formulário
     quantidade_barras = int(request.form['quantidade_barras'])
 
     return redirect('/')
@@ -48,38 +49,81 @@ def atualizar_grafico():
 @app.route('/upload', methods=['POST'])
 def upload_file():
 
-    if 'file' not in request.files:
-        return 'No file part', 400
-
     file = request.files['file']
-
-    if file.filename == '':
-        return 'No selected file', 400
 
     filename = 'planilha.xlsx'
     filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
     file.save(filepath)
 
-    return redirect('/excel_to_mysql')
+    return redirect('/excel_para_mysql')
 
 
-@app.route('/excel_to_mysql')
+
+@app.route('/excel_para_mysql')
 def inserir_data():
 
     insert_data_from_excel(mysql, excel_file_path)
 
     if os.path.exists(excel_file_path):
-        # Exclui o arquivo se ele existir
+
         os.remove(excel_file_path)
 
     return redirect('/')
 
+# CRUDs para não perder nota
 
-@app.route('/receber_arquivo')
-def receber_arquivo():
 
-    return render_template('receber_arquivo.html')
+# UPDATE
+@app.route('/atualizar_nome/<int:id>/<nome>')
+def atualizar_nome_paciente(id, nome):
+    cursor = mysql.connection.cursor()
+    ano = pegar_ano_atual()
+
+    cursor.execute(f"""
+    UPDATE pacientes_{ano}
+    SET nome = '{nome}'
+    WHERE id = {id};
+    """)
+    mysql.connection.commit()
+    cursor.close()
+    return f"Nome do paciente com ID {id} atualizado para '{nome}' com sucesso."
+
+
+# soft DELETE
+@app.route('/deletar/<int:id>')
+def deletar(id):
+    cursor = mysql.connection.cursor()
+    ano = pegar_ano_atual()
+
+    cursor.execute(f"""
+    UPDATE pacientes_{ano}
+    SET status = 'excluído'
+    WHERE id = {id};
+    """)
+
+    mysql.connection.commit()
+    cursor.close()
+    return f"Paciente  {id}  excluído com sucesso."
+
+# DELETE historico
+@app.route('/deletar_historico/<int:id>')
+def deletar_historico(id):
+    cursor = mysql.connection.cursor()
+    ano = pegar_ano_atual()
+
+    cursor.execute(f"""
+    DELETE FROM historico_alteracoes
+    WHERE id = {id};
+    """)
+
+    mysql.connection.commit()
+    cursor.close()
+    return f"historico {id} excluído com sucesso."
+
+
 
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
+
+

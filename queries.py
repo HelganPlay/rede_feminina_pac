@@ -1,11 +1,12 @@
 import datetime
 
-def get_current_year():
+def pegar_ano_atual():
     return datetime.datetime.now().year
 
-year = datetime.datetime.now().year
+year = pegar_ano_atual()
 
-def create_table_for_year(mysql, year):
+# CREATE
+def criar_tabela_para_o_ano(mysql):
     table_name = f'pacientes_{year}'
     cursor = mysql.connection.cursor()
     cursor.execute(f"""
@@ -32,13 +33,8 @@ def create_table_for_year(mysql, year):
     cursor.close()
 
 
-def check_and_create_table(mysql):
-    year = get_current_year()
-    create_table_for_year(mysql, year)
-    return year
-
+# READ
 def contar_quantidade_total(mysql, coluna):
-    table_name = f'pacientes_{year}'
     cursor = mysql.connection.cursor()
     cursor.execute(f""" 
     SELECT COUNT({coluna}) AS Quantidade_total
@@ -47,6 +43,7 @@ def contar_quantidade_total(mysql, coluna):
     cursor.close()
     return valor
 
+# READ
 def contar_quantidade_diferentes(mysql, coluna, limite):
     cursor = mysql.connection.cursor()
     cursor.execute(f"""SELECT {coluna}, COUNT(*) as count
@@ -62,9 +59,3 @@ def contar_quantidade_diferentes(mysql, coluna, limite):
     return tipos_cancer, contagens
 
 
-def pessoas_por_tipo_de_cancer(mysql):
-    cursor = mysql.connection.cursor()
-    cursor.execute(f"""SELECT Tipo_Cancer, COUNT(*) AS total FROM pacientes_{year} GROUP BY Tipo_Cancer;""")
-    resultado = cursor.fetchone()
-    cursor.close()
-    return resultado
